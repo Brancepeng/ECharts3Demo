@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="./js/echarts-all-3.js"></script>
+       <script type="text/javascript" src="./js/dataTool.js"></script>
+       <script type="text/javascript" src="./js/china.js"></script>
+       <script type="text/javascript" src="./js/world.js"></script>
+       <script type="text/javascript" src="./js/bmap.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+
+
+
+//定义数据格式；
+
+var data = [
+  [[1451613600000,'通话','张三->李四',120],[1451614600000,'通话','张三->李四',120],[1451615600000,'通话','张三->李四',120]],
+  [[1451613600000,'住宿',2,1451613700000,'中华大酒店','闵行区'],[1451614600000,'住宿',1,1451613700000,'中华大酒店','闵行区'],[1451615600000,'住宿',5,1451613700000,'中华大酒店','闵行区']],
+  [[1451613600000,'火车',6,'G319'],[1451614600000,'火车',1,'G319'],[1451615600000,'火车',5,'G319']],
+  [[1451613600000,'资金',6,'张三->李四','现金->23924733332'],[1451614600000,'资金',1,'张三->李四','现金->23924733332'],[1451615600000,'资金',5,'张三->李四','现金->23924733332']],
+  [[1451613600000,'物流',1451613600000,'张三','李四','浦东区','闵行区'],
+    [1451614600000,'物流',1451613600000,'张三','李四','浦东区','闵行区'],
+    [1451613700000,'物流',1451613600000,'张三','李四','浦东区','闵行区']
+  ]
+];
+option = {
+    title : {
+        text: '人员行为',
+        subtext: '详情'
+    },
+    grid: {
+        left: '3%',
+        right: '7%',
+        bottom: '3%',
+        containLabel: true
+    },
+    tooltip : {
+        trigger: 'item',
+        showDelay : 0,
+
+      padding: 10,
+      backgroundColor: '#222',
+      borderColor: '#777',
+      borderWidth: 1,
+      enterable:true,
+      formatter: function (obj) {
+        var value = obj.value;
+        var name = obj.seriesName;
+        var expression = '';
+        switch (name){
+          case '资金':
+            expression = '<div>'+'资金交易'+'</div>'
+                    + '交易金额：' + '120,000元'+'<br>'
+                    + '<a href="http://www.baidu.com">'+'跳转'+'</a>'+'</div>'
+                    +'交易人：'+'张三'+ '->'+ '莫某'+'<br>'
+                    +'交易方式:'+'现金'+'->'+'2387375742221'+'<br>'
+                    +'交易时间:'+'2015.05.01 17:23:20';
+            break;
+          case '火车':
+            expression = '<div>'+'同火车'+'</div>'
+                    + '交易金额：' + '120,000元'+'<br>'
+                    +'交易人：'+'张三'+ '->'+ '莫某'+'<br>'
+                    +'交易方式:'+'现金'+'->'+'2387375742221'+'<br>'
+                    +'交易时间:'+'2015.05.01 17:23:20';
+            break;
+          case '住宿':
+            expression = '<div>'+'同住宿'+'</div>'
+                    + '交易金额：' + '120,000元'+'<br>'
+                    +'交易人：'+'张三'+ '->'+ '莫某'+'<br>'
+                    +'交易方式:'+'现金'+'->'+'2387375742221'+'<br>'
+                    +'交易时间:'+'2015.05.01 17:23:20';
+            break;
+          case '物流':
+            expression = '<div>'+'物流信息'+'</div>'
+                    + '交易金额：' + '120,000元'+'<br>'
+                    +'交易人：'+'张三'+ '->'+ '莫某'+'<br>'
+                    +'交易方式:'+'现金'+'->'+'2387375742221'+'<br>'
+                    +'交易时间:'+'2015.05.01 17:23:20';
+            break;
+          case '通话':
+            expression = '<div>'+'通话记录'+'</div>'
+                    + '交易金额：' + '120,000元'+'<br>'
+                    +'交易人：'+'张三'+ '->'+ '莫某'+'<br>'
+                    +'交易方式:'+'现金'+'->'+'2387375742221'+'<br>'
+                    +'交易时间:'+'2015.05.01 17:23:20';
+            break;
+          default:
+            expression='无任何数据哦...';
+        }
+
+        return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+                + obj.seriesName + ' ' + value[0] + '日：'
+                + '</div>'
+                + expression ;
+
+      },
+        axisPointer:{
+            show: true,
+            type : 'cross',
+            lineStyle: {
+                type : 'dashed',
+                width : 1
+            }
+        }
+    },
+    toolbox: {
+        feature: {
+            dataZoom: {},
+            brush: {
+                type: ['rect', 'polygon', 'clear']
+            }
+        }
+    },
+    brush: {
+    },
+    legend: {
+        data: ['通话','住宿','火车','资金','物流'],
+        left: 'center'
+    },
+    xAxis : [
+        {
+            type : 'time',
+            scale:true,
+           // interval:1474006505000,
+           /* axisLabel : {
+                formatter: '{value}'
+            },*/
+          axisTick:{show:true},
+            splitLine: {
+                show: false
+            },
+          axisLabel:{show:false}
+        }
+    ],
+    yAxis : [
+        {
+            type : 'category',
+            //scale:true,
+            data:['通话','住宿','火车','资金','物流'],
+            axisTick:{
+                show:false
+            },
+            splitLine: {
+                show: true,
+                lineStyle: {
+                    color: '#999',
+                    type: 'dashed'
+                }
+            },
+        }
+    ],
+    dataZoom: [
+        {   // 这个dataZoom组件，默认控制x轴。
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 0,      // 左边在 10% 的位置。
+            end: 100         // 右边在 60% 的位置。
+        }
+    ],
+    series : [
+        {
+            name:'住宿',
+            type:'scatter',
+            symbolSize: function (data) {
+                return data[2]*10;
+            },
+           /* data: [[0,'2016-1-1 10:00:00',25],[1,'2016-1-1 11:00:00',1],[2,'2016-1-1 12:00:00',5],
+                [3,'2016-1-1 13:00:00',4],[1,'2016-1-1 14:00:00',2],[2,'2016-1-1 15:00:00',3],
+                [6,'2016-1-1 16:00:00',5],[2,'2016-1-1 17:00:00',2],[1,'2016-2-1 10:00:00',4]
+            ]*/
+            //data: [[1451613600000,'住宿',6],[1451614600000,'住宿',1],[1451615600000,'住宿',5]]
+          data:data[1]
+        },
+        {
+            name:'火车',
+            type:'scatter',
+            symbolSize: function (data) {
+              console.log(data);
+                return data[2]*5;
+            },
+            /*data: [[0,'2016-1-1 10:00:00',25],[2,'2016-1-1 11:00:00',12],[6,'2016-1-1 12:00:00',3],
+                [5,'2016-1-1 13:00:00',2],[3,'2016-1-1 14:00:00',12],[4,'2016-1-1 15:00:00',8],
+                [1,'2016-1-1 16:00:00',12],[1,'2016-1-1 17:00:00',12],[6,'2016-2-1 10:00:00',10]
+            ],*/
+            //data: [[1451613600000,'火车',6],[1451613650000,'火车',0],[1451613750000,'火车',3],[1451613850000,'火车',2]]
+          data:data[2]
+        },
+      {
+        name:'物流',
+        type:'scatter',
+        /*symbolSize: function (data) {
+          console.log(data);
+          return data[2]/50000000;
+        },*/
+        /*data: [[0,'2016-1-1 10:00:00',25],[2,'2016-1-1 11:00:00',12],[6,'2016-1-1 12:00:00',3],
+         [5,'2016-1-1 13:00:00',2],[3,'2016-1-1 14:00:00',12],[4,'2016-1-1 15:00:00',8],
+         [1,'2016-1-1 16:00:00',12],[1,'2016-1-1 17:00:00',12],[6,'2016-2-1 10:00:00',10]
+         ],*/
+        //data: [[1451613600000,'物流',6],[1451613650000,'物流',0],[1451613750000,'物流',3],[1451613850000,'物流',2]]
+        data:data[4]
+      },
+      {
+        name:'通话',
+        type:'scatter',
+        /*symbolSize: function (data) {
+          console.log(data);
+          return data[3]/4;
+        },*/
+        /*data: [[0,'2016-1-1 10:00:00',25],[2,'2016-1-1 11:00:00',12],[6,'2016-1-1 12:00:00',3],
+         [5,'2016-1-1 13:00:00',2],[3,'2016-1-1 14:00:00',12],[4,'2016-1-1 15:00:00',8],
+         [1,'2016-1-1 16:00:00',12],[1,'2016-1-1 17:00:00',12],[6,'2016-2-1 10:00:00',10]
+         ],*/
+        //data: [[1451613600000,'通话',6],[1451613650000,'通话',0],[1451613750000,'通话',3],[1451613850000,'通话',2]]
+        data:data[0]
+      },
+      {
+        name:'资金',
+        type:'scatter',
+        /*symbolSize: function (data) {
+          console.log(data);
+          return data[2]*5;
+        },*/
+        /*data: [[0,'2016-1-1 10:00:00',25],[2,'2016-1-1 11:00:00',12],[6,'2016-1-1 12:00:00',3],
+         [5,'2016-1-1 13:00:00',2],[3,'2016-1-1 14:00:00',12],[4,'2016-1-1 15:00:00',8],
+         [1,'2016-1-1 16:00:00',12],[1,'2016-1-1 17:00:00',12],[6,'2016-2-1 10:00:00',10]
+         ],*/
+        //data: [[1451613600000,'资金',6],[1451613650000,'资金',0],[1451613750000,'资金',3],[1451613850000,'资金',2]]
+        data:data[3]
+      },
+    ]
+};
+;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+//    myChart.showLoading()
+}
+//
+
+myChart.on('click', function (params) {
+  console.log(params);
+});
+
+myChart.dispatchAction({
+  type: 'downplay',
+  // 可选，系列 index，可以是一个数组指定多个系列
+  //seriesIndex?: number|Array,
+  // 可选，系列名称，可以是一个数组指定多个系列
+  //seriesName?: string|Array,
+  seriesName: ['火车','资金'],
+  // 可选，数据的 index
+  //dataIndex?: number,
+  // 可选，数据的 名称
+  //name?: string
+});
+       </script>
+   </body>
+</html>
